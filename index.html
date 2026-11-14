@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simbloxy Univers Rose et Gaming</title>
+    <title>Simbloxy - Site officiel</title>
     <style>
         * {
             margin: 0;
@@ -32,6 +32,26 @@
             opacity: 0.25;
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* BALLONS ANIMÉS POUR LES CHANGEMENTS DE PAGE */
+        .balloon {
+            position: fixed;
+            bottom: -100px;
+            width: 40px;
+            height: 50px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid white;
+            box-shadow: inset -5px -5px 0 rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
+            animation: float-balloon 4s ease-in forwards;
+            z-index: 9999;
+        }
+
+        @keyframes float-balloon {
+            0% { transform: translateY(0) scale(0.8); opacity: 1; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
         }
 
         #welcome-overlay {
@@ -151,7 +171,7 @@
 
         .nav-links {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             list-style: none;
             align-items: center;
             flex-wrap: wrap;
@@ -161,7 +181,7 @@
             text-decoration: none;
             color: #ff4d6d;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: all 0.2s ease;
             background: none;
             border: none;
@@ -171,15 +191,14 @@
         .nav-btn-highlight {
             background: linear-gradient(135deg, #ff4d6d, #ff0033);
             color: white !important;
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
         }
 
         .nav-btn-admin {
             background: linear-gradient(135deg, #590d22, #c9184a);
             color: white !important;
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 20px;
         }
 
@@ -354,7 +373,7 @@
 
         @media (max-width: 600px) {
             .navbar { flex-direction: column; gap: 12px; }
-            .nav-links { gap: 8px; flex-wrap: wrap; justify-content: center; }
+            .nav-links { gap: 6px; flex-wrap: wrap; justify-content: center; }
         }
     </style>
 </head>
@@ -365,7 +384,7 @@
     <div id="welcome-overlay">
         <div id="stars-container"></div>
         <img src="simbloxy.png" onerror="this.src='file_000000003b8482108edbae23e4537d50.png'" alt="Simbloxy Pdp" class="welcome-avatar">
-        <h1 class="welcome-title">Bienvenue dans le monde de Simbloxy</h1>
+        <h1 class="welcome-title">Simbloxy - Site officiel</h1>
         <p class="welcome-subtitle">Roblox - Gaming - Community</p>
         <button class="btn-discover" onclick="enterSite()">Découvrir</button>
     </div>
@@ -378,6 +397,7 @@
                 <li><a href="#about" onclick="switchView('main-view')">Bio</a></li>
                 <li><a href="#links" onclick="switchView('main-view')">Réseaux</a></li>
                 <li><a href="#gaming" onclick="switchView('main-view')">Gaming</a></li>
+                <li><a href="#" onclick="switchView('forum-view')">Forum</a></li>
                 <li><a href="#" onclick="switchView('candidature-view')">Candidater</a></li>
                 <li>
                     <button class="nav-btn nav-btn-highlight" onclick="switchView('youtube-view')">
@@ -471,6 +491,42 @@
 
         </div>
 
+        <!-- PAGE FORUM UNIQUE -->
+        <div id="forum-view" class="page-view hidden-view">
+            <div class="card" style="text-align: center; background: linear-gradient(135deg, #ff80a0, #c9184a); color: white;">
+                <h1>Forum de discussion</h1>
+                <p>Réponds à la question posée par l'administration !</p>
+                <button onclick="switchView('main-view')" style="margin-top: 15px; background: white; color: #c9184a; border: none; padding: 8px 20px; border-radius: 20px; font-weight: 700; cursor: pointer;">
+                    Retour au site
+                </button>
+            </div>
+            
+            <div class="card">
+                <div style="background: #ffe5ec; padding: 15px 20px; border-radius: 15px; border: 1px solid #ff80a0; margin-bottom: 20px;">
+                    <strong style="color: #c9184a; font-size: 0.95rem;">Question actuelle du forum :</strong>
+                    <p id="forum-current-question" style="color: #590d22; margin-top: 6px; font-weight: 600; font-size: 1.1rem;">Chargement...</p>
+                </div>
+
+                <h3 style="color: #c9184a; font-size: 1.1rem; margin-bottom: 10px;">Réponses de la communauté</h3>
+                <div class="comments-list" id="forum-replies-list" style="margin-bottom: 20px;">
+                    <p style="color: #ff4d6d; font-size: 0.9rem;">Aucune réponse pour le moment.</p>
+                </div>
+
+                <form onsubmit="submitForumMessage(event)">
+                    <div class="form-group">
+                        <label>Ton pseudo :</label>
+                        <input type="text" class="form-control" id="forum-user-name" required placeholder="Ex: PseudoRoblox">
+                    </div>
+                    <div class="form-group">
+                        <label>Ta réponse :</label>
+                        <textarea class="form-control" id="forum-user-msg" rows="3" required placeholder="Écris ton message ici..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-page-yt">Publier ma réponse</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- PAGE CANDIDATURE UNIQUE -->
         <div id="candidature-view" class="page-view hidden-view">
             <div class="card" style="text-align: center; background: linear-gradient(135deg, #ff80a0, #c9184a); color: white;">
                 <h1>Candidature Modérateur</h1>
@@ -481,34 +537,31 @@
             </div>
             
             <div class="card" id="cand-form-card">
-                <h3 style="color: #c9184a; margin-bottom: 15px;">Formulaire de Candidature</h3>
+                <div style="background: #ffe5ec; padding: 15px 20px; border-radius: 15px; border: 1px solid #ff80a0; margin-bottom: 20px;">
+                    <strong style="color: #c9184a; font-size: 0.95rem;">Question de candidature :</strong>
+                    <p id="cand-current-question" style="color: #590d22; margin-top: 6px; font-weight: 600; font-size: 1.1rem;">Chargement...</p>
+                </div>
+
                 <form id="moderator-form" onsubmit="submitCandidature(event)">
                     <div class="form-group">
-                        <label>Ton Pseudo Roblox / Discord :</label>
-                        <input type="text" class="form-control" id="cand-name" required placeholder="Ex: SimbloxyFan#1234">
+                        <label>Ton pseudo :</label>
+                        <input type="text" class="form-control" id="cand-name" required placeholder="Ex: PseudoDiscord">
                     </div>
                     <div class="form-group">
-                        <label>Quel est ton âge ?</label>
-                        <input type="number" class="form-control" id="cand-age" required placeholder="Ex: 15">
-                    </div>
-                    <div class="form-group">
-                        <label>Pourquoi souhaites-tu devenir modérateur ?</label>
-                        <textarea class="form-control" id="cand-motivation" rows="3" required placeholder="Explique tes motivations..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Quelles sont tes expériences en modération ?</label>
-                        <textarea class="form-control" id="cand-exp" rows="2" placeholder="As-tu déjà modéré des serveurs ?"></textarea>
+                        <label id="cand-question-label">Réponse à la question :</label>
+                        <textarea class="form-control" id="cand-answer" rows="3" required placeholder="Rédige ta réponse..."></textarea>
                     </div>
                     <button type="submit" class="btn btn-page-yt" id="cand-submit-btn">Envoyer ma candidature</button>
                 </form>
             </div>
 
             <div class="card" id="cand-closed-notice" style="display: none; text-align: center; background: #fff0f3;">
-                <h3 style="color: #9b2226; margin-bottom: 10px;">Candidatures fermées</h3>
-                <p style="color: #590d22;">Les candidatures pour le poste de modérateur sont actuellement fermées ou bloquées par l'administration. Revenez plus tard !</p>
+                <h3 style="color: #9b2226; margin-bottom: 10px;">Candidature bloquée ou fermée</h3>
+                <p style="color: #590d22;">Cette candidature est actuellement fermée par l'administration.</p>
             </div>
         </div>
 
+        <!-- PAGE YOUTUBE -->
         <div id="youtube-view" class="page-view hidden-view">
             <div class="card" style="text-align: center; background: linear-gradient(135deg, #ff758c, #ff7eb3); color: white;">
                 <img src="simbloxy.png" onerror="this.src='file_000000003b8482108edbae23e4537d50.png'" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid white; margin-bottom: 10px;">
@@ -548,21 +601,51 @@
             </div>
         </div>
 
+        <!-- PANNEAU ADMIN UNIQUE -->
         <div id="admin-view" class="page-view hidden-view">
             <div class="card" style="background: linear-gradient(135deg, #590d22, #c9184a); color: white; text-align: center;">
                 <h1>Panneau d'Administration</h1>
-                <p>Gestion sécurisée via Token (.env : Sim.2k26)</p>
+                <p>Gestion sécurisée des questions et des statuts individuels</p>
                 <button onclick="switchView('main-view')" style="margin-top: 15px; background: white; color: #c9184a; border: none; padding: 8px 20px; border-radius: 20px; font-weight: 700; cursor: pointer;">
                     Quitter l'admin
                 </button>
             </div>
             
+            <!-- Gestion Forum (1 seule question modifiable/créable/supprimable) -->
             <div class="card">
-                <h3 style="color: #c9184a; margin-bottom: 15px;">Gestion du Statut des Candidatures Modo</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 15px; color: #590d22;">Modifiez instantanément l'ouverture ou la fermeture des candidatures sur le site :</p>
+                <h3 style="color: #c9184a; margin-bottom: 15px;">Gestion du Forum</h3>
+                <form onsubmit="handleSaveForumQuestion(event)">
+                    <div class="form-group">
+                        <label>Modifier ou créer la question unique du forum :</label>
+                        <input type="text" class="form-control" id="admin-forum-q-input" required placeholder="Ex: Quel est votre mode de jeu préféré ?">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-page-yt" style="margin-top:0;">Enregistrer / Créer</button>
+                        <button type="button" onclick="handleDeleteForumQuestion()" class="btn" style="background: #9b2226; color: white; margin-top:0;">Supprimer la question</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Gestion Candidature (1 seule question et blocage individuel) -->
+            <div class="card">
+                <h3 style="color: #c9184a; margin-bottom: 15px;">Gestion de la Candidature</h3>
+                <form onsubmit="handleSaveCandQuestion(event)" style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label>Modifier ou créer la question unique de candidature :</label>
+                        <input type="text" class="form-control" id="admin-cand-q-input" required placeholder="Ex: Pourquoi voulez-vous être modérateur ?">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-page-yt" style="margin-top:0;">Enregistrer / Créer</button>
+                        <button type="button" onclick="handleDeleteCandQuestion()" class="btn" style="background: #9b2226; color: white; margin-top:0;">Supprimer la question</button>
+                    </div>
+                </form>
+
+                <hr style="border: 1px dashed #ffb3c6; margin: 20px 0;">
+
+                <h4 style="color: #c9184a; font-size: 1rem; margin-bottom: 10px;">Bloquer / Débloquer la candidature (un par un)</h4>
                 <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                    <button onclick="setCandidateStatus('ouvert')" class="btn" style="background: #2d6a4f; color: white; width: auto; flex: 1;">Ouvrir les candidatures</button>
-                    <button onclick="setCandidateStatus('ferme')" class="btn" style="background: #9b2226; color: white; width: auto; flex: 1;">Fermer / Bloquer</button>
+                    <button onclick="toggleSingleCandStatus('ouvert')" class="btn" style="background: #2d6a4f; color: white; width: auto; flex: 1; margin-top:0;">Débloquer cette candidature</button>
+                    <button onclick="toggleSingleCandStatus('ferme')" class="btn" style="background: #9b2226; color: white; width: auto; flex: 1; margin-top:0;">Fermer / Bloquer cette candidature</button>
                 </div>
             </div>
         </div>
@@ -574,10 +657,11 @@
 
     </div>
 
+    <!-- MODAL ADMIN -->
     <div id="admin-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
         <div class="card" style="background:white; max-width:350px; width:90%; text-align:center;">
             <h3 style="color: #c9184a; margin-bottom: 15px;">Connexion Admin</h3>
-            <p style="font-size: 0.85rem; color: #ff4d6d; margin-bottom: 15px;">Entrez le mot de passe (Sim.2k26) :</p>
+            <p style="font-size: 0.85rem; color: #ff4d6d; margin-bottom: 15px;">Entrez le mot de passe secret :</p>
             <input type="password" id="admin-token-input" placeholder="Mot de passe..." style="width:100%; padding:10px; border:2px solid #ffb3c6; border-radius:20px; outline:none; margin-bottom:15px; text-align:center;">
             <button onclick="verifyAdminToken()" class="btn btn-page-yt" style="margin-top:0;">Valider</button>
             <button onclick="closeAdminLogin()" style="background:none; border:none; color:#590d22; margin-top:10px; cursor:pointer;">Annuler</button>
@@ -592,7 +676,18 @@
         const YOUTUBE_API_KEY = "AIzaSyCvKU4Xar6x2yEyWEbgrbEa99kCTB25Dc4";
         const CHANNEL_HANDLE = "@Simbloxy_YTB";
 
-        let candStatus = localStorage.getItem('simbloxy_cand_status') || 'ouvert';
+        // Stockage local pour la question unique de forum, candidature, statut et réponses
+        let forumQuestion = localStorage.getItem('simbloxy_forum_q') || "Quel est ton meilleur souvenir sur Roblox ?";
+        let forumReplies = JSON.parse(localStorage.getItem('simbloxy_forum_replies')) || [];
+        
+        let candQuestion = localStorage.getItem('simbloxy_cand_q') || "Explique tes motivations pour devenir modérateur.";
+        let candStatus = localStorage.getItem('simbloxy_cand_status') || 'ouvert'; // 'ouvert' ou 'ferme'
+
+        // Tableau d'avatars de secours ou récupérés des abonnés/commentaires pour les ballons
+        let subscriberAvatars = [
+            "simbloxy.png",
+            "file_000000003b8482108edbae23e4537d50.png"
+        ];
 
         const starsContainer = document.getElementById('stars-container');
         for (let i = 0; i < 30; i++) {
@@ -613,6 +708,7 @@
         }
 
         function switchView(viewId) {
+            triggerBallons();
             document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden-view'));
             const activeView = document.getElementById(viewId);
             if (activeView) activeView.classList.remove('hidden-view');
@@ -620,17 +716,79 @@
 
             if (viewId === 'youtube-view') {
                 fetchYouTubeLiveStats();
+            } else if (viewId === 'forum-view') {
+                updateForumUI();
             } else if (viewId === 'candidature-view') {
                 updateCandidatureUI();
+            } else if (viewId === 'admin-view') {
+                document.getElementById('admin-forum-q-input').value = forumQuestion;
+                document.getElementById('admin-cand-q-input').value = candQuestion;
             }
         }
 
+        // Effet de ballons montants avec photo de profil au hasard lors des changements de page
+        function triggerBallons() {
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    const randomAvatar = subscriberAvatars[Math.floor(Math.random() * subscriberAvatars.length)];
+                    balloon.style.backgroundImage = `url('${randomAvatar}')`;
+                    balloon.style.left = Math.random() * 85 + 5 + '%';
+                    balloon.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                    document.body.appendChild(balloon);
+                    setTimeout(() => balloon.remove(), 4000);
+                }, i * 200);
+            }
+        }
+
+        // --- GESTION DU FORUM ---
+        function updateForumUI() {
+            document.getElementById('forum-current-question').textContent = forumQuestion ? forumQuestion : "Aucune question définie pour le moment.";
+            const listContainer = document.getElementById('forum-replies-list');
+            listContainer.innerHTML = '';
+
+            if (forumReplies.length === 0) {
+                listContainer.innerHTML = `<p style="color: #ff4d6d; font-size: 0.9rem;">Aucune réponse pour le moment.</p>`;
+                return;
+            }
+
+            forumReplies.forEach(r => {
+                listContainer.innerHTML += `
+                    <div style="background: #fff0f3; padding: 12px 15px; border-radius: 15px; border: 1px solid #ffb3c6;">
+                        <div class="comment-author" style="color: #c9184a;">${escapeHtml(r.author)}</div>
+                        <div class="comment-text" style="color: #590d22; margin-top: 4px;">${escapeHtml(r.text)}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function submitForumMessage(event) {
+            event.preventDefault();
+            if (!forumQuestion) {
+                alert("Il n'y a pas de question active sur le forum.");
+                return;
+            }
+            const author = document.getElementById('forum-user-name').value;
+            const text = document.getElementById('forum-user-msg').value;
+
+            forumReplies.unshift({ author, text });
+            localStorage.setItem('simbloxy_forum_replies', JSON.stringify(forumReplies));
+            updateForumUI();
+            document.getElementById('forum-user-msg').value = '';
+            showToast('Réponse publiée avec succès');
+        }
+
+        // --- GESTION DES CANDIDATURES ---
         function updateCandidatureUI() {
             const banner = document.getElementById('cand-status-banner');
             const formCard = document.getElementById('cand-form-card');
             const closedNotice = document.getElementById('cand-closed-notice');
+            const qElement = document.getElementById('cand-current-question');
 
-            if (candStatus === 'ouvert') {
+            qElement.textContent = candQuestion ? candQuestion : "Aucune question de candidature active.";
+
+            if (candStatus === 'ouvert' && candQuestion) {
                 banner.textContent = "Statut actuel : Ouvert";
                 banner.style.color = "#2d6a4f";
                 formCard.style.display = 'block';
@@ -645,8 +803,8 @@
 
         function submitCandidature(event) {
             event.preventDefault();
-            if (candStatus === 'ferme') {
-                alert('Les candidatures sont actuellement fermées.');
+            if (candStatus === 'ferme' || !candQuestion) {
+                alert('La candidature est actuellement fermée ou bloquée.');
                 return;
             }
             const name = document.getElementById('cand-name').value;
@@ -654,6 +812,7 @@
             document.getElementById('moderator-form').reset();
         }
 
+        // --- ESPACE ADMIN ---
         function openAdminLogin() {
             document.getElementById('admin-modal').style.display = 'flex';
         }
@@ -665,19 +824,55 @@
 
         function verifyAdminToken() {
             const token = document.getElementById('admin-token-input').value;
+            // Mot de passe secret défini (Sim.2k26)
             if (token === "Sim.2k26") {
                 closeAdminLogin();
                 switchView('admin-view');
                 showToast('Connexion admin réussie');
             } else {
-                alert('Mot de passe incorrect (Token requis : Sim.2k26)');
+                alert('Mot de passe incorrect');
             }
         }
 
-        function setCandidateStatus(status) {
+        function handleSaveForumQuestion(event) {
+            event.preventDefault();
+            const val = document.getElementById('admin-forum-q-input').value;
+            forumQuestion = val;
+            localStorage.setItem('simbloxy_forum_q', forumQuestion);
+            showToast('Question du forum enregistrée / créée');
+        }
+
+        function handleDeleteForumQuestion() {
+            forumQuestion = "";
+            localStorage.removeItem('simbloxy_forum_q');
+            document.getElementById('admin-forum-q-input').value = "";
+            showToast('Question du forum supprimée');
+        }
+
+        function handleSaveCandQuestion(event) {
+            event.preventDefault();
+            const val = document.getElementById('admin-cand-q-input').value;
+            candQuestion = val;
+            localStorage.setItem('simbloxy_cand_q', candQuestion);
+            showToast('Question de candidature enregistrée / créée');
+        }
+
+        function handleDeleteCandQuestion() {
+            candQuestion = "";
+            localStorage.removeItem('simbloxy_cand_q');
+            document.getElementById('admin-cand-q-input').value = "";
+            showToast('Question de candidature supprimée');
+        }
+
+        function toggleSingleCandStatus(status) {
             candStatus = status;
-            localStorage.setItem('simbloxy_cand_status', status);
-            showToast(`Statut des candidatures mis à jour : ${status.toUpperCase()}`);
+            localStorage.setItem('simbloxy_cand_status', candStatus);
+            showToast(`Candidature ${status === 'ouvert' ? 'débloquée' : 'bloquée/fermée'}`);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
         function copyDiscordLink() {
@@ -725,6 +920,11 @@
                             const videoId = snippet.resourceId.videoId;
                             const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
+                            // Ajouter les miniatures aux avatars de ballons pour varier
+                            if (snippet.thumbnails.medium && snippet.thumbnails.medium.url) {
+                                subscriberAvatars.push(snippet.thumbnails.medium.url);
+                            }
+
                             videosContainer.innerHTML += `
                                 <a href="${videoUrl}" target="_blank" class="video-card">
                                     <img src="${snippet.thumbnails.high ? snippet.thumbnails.high.url : snippet.thumbnails.medium.url}" class="video-thumb-img">
@@ -757,6 +957,11 @@
                 if (commentData.items && commentData.items.length > 0) {
                     commentData.items.forEach(item => {
                         const topComment = item.snippet.topLevelComment.snippet;
+                        
+                        if (topComment.authorProfileImageUrl) {
+                            subscriberAvatars.push(topComment.authorProfileImageUrl);
+                        }
+
                         commentsContainer.innerHTML += `
                             <div class="comment-item">
                                 <img src="${topComment.authorProfileImageUrl}" class="comment-avatar-img">
