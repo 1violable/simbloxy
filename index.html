@@ -34,24 +34,40 @@
             z-index: 0;
         }
 
-        /* BALLONS ANIMÉS POUR LES CHANGEMENTS DE PAGE */
-        .balloon {
+        /* VOILE POUR LES BALLONS (DISCRET POUR NE PAS CACHER LA PAGE) */
+        .balloons-overlay {
             position: fixed;
-            bottom: -100px;
-            width: 40px;
-            height: 50px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+            display: none;
+        }
+
+        .balloons-overlay.active {
+            display: block;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -120px;
+            width: 45px;
+            height: 55px;
             border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
             background-size: cover;
             background-position: center;
             border: 2px solid white;
-            box-shadow: inset -5px -5px 0 rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
-            animation: float-balloon 4s ease-in forwards;
-            z-index: 9999;
+            box-shadow: inset -5px -5px 0 rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.15);
+            animation: float-balloon 2.5s ease-out forwards;
         }
 
         @keyframes float-balloon {
-            0% { transform: translateY(0) scale(0.8); opacity: 1; }
-            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+            0% { transform: translateY(0) scale(0.8); opacity: 0.9; }
+            80% { opacity: 0.9; }
+            100% { transform: translateY(-110vh) scale(1.1); opacity: 0; }
         }
 
         #welcome-overlay {
@@ -381,6 +397,9 @@
 
     <div class="sparkle-bg"></div>
 
+    <!-- CONTENEUR DE BALLONS SÉCURISÉ (NON BLOQUANT) -->
+    <div id="balloons-overlay" class="balloons-overlay"></div>
+
     <div id="welcome-overlay">
         <div id="stars-container"></div>
         <img src="simbloxy.png" onerror="this.src='file_000000003b8482108edbae23e4537d50.png'" alt="Simbloxy Pdp" class="welcome-avatar">
@@ -642,7 +661,7 @@
 
                 <hr style="border: 1px dashed #ffb3c6; margin: 20px 0;">
 
-                <h4 style="color: #c9184a; font-size: 1rem; margin-bottom: 10px;">Bloquer / Débloquer la candidature (un par un)</h4>
+                <h4 style="color: #c9184a; font-size: 1rem; margin-bottom: 10px;">Bloquer / Débloquer la candidature (individuellement)</h4>
                 <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                     <button onclick="toggleSingleCandStatus('ouvert')" class="btn" style="background: #2d6a4f; color: white; width: auto; flex: 1; margin-top:0;">Débloquer cette candidature</button>
                     <button onclick="toggleSingleCandStatus('ferme')" class="btn" style="background: #9b2226; color: white; width: auto; flex: 1; margin-top:0;">Fermer / Bloquer cette candidature</button>
@@ -676,14 +695,12 @@
         const YOUTUBE_API_KEY = "AIzaSyCvKU4Xar6x2yEyWEbgrbEa99kCTB25Dc4";
         const CHANNEL_HANDLE = "@Simbloxy_YTB";
 
-        // Stockage local pour la question unique de forum, candidature, statut et réponses
         let forumQuestion = localStorage.getItem('simbloxy_forum_q') || "Quel est ton meilleur souvenir sur Roblox ?";
         let forumReplies = JSON.parse(localStorage.getItem('simbloxy_forum_replies')) || [];
         
         let candQuestion = localStorage.getItem('simbloxy_cand_q') || "Explique tes motivations pour devenir modérateur.";
-        let candStatus = localStorage.getItem('simbloxy_cand_status') || 'ouvert'; // 'ouvert' ou 'ferme'
+        let candStatus = localStorage.getItem('simbloxy_cand_status') || 'ouvert';
 
-        // Tableau d'avatars de secours ou récupérés des abonnés/commentaires pour les ballons
         let subscriberAvatars = [
             "simbloxy.png",
             "file_000000003b8482108edbae23e4537d50.png"
@@ -708,41 +725,52 @@
         }
 
         function switchView(viewId) {
-            triggerBallons();
-            document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden-view'));
-            const activeView = document.getElementById(viewId);
-            if (activeView) activeView.classList.remove('hidden-view');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if (viewId === 'youtube-view') {
-                fetchYouTubeLiveStats();
-            } else if (viewId === 'forum-view') {
-                updateForumUI();
-            } else if (viewId === 'candidature-view') {
-                updateCandidatureUI();
-            } else if (viewId === 'admin-view') {
-                document.getElementById('admin-forum-q-input').value = forumQuestion;
-                document.getElementById('admin-cand-q-input').value = candQuestion;
-            }
+            triggerBalloonsThenSwitch(viewId);
         }
 
-        // Effet de ballons montants avec photo de profil au hasard lors des changements de page
-        function triggerBallons() {
-            for (let i = 0; i < 4; i++) {
-                setTimeout(() => {
-                    const balloon = document.createElement('div');
-                    balloon.className = 'balloon';
-                    const randomAvatar = subscriberAvatars[Math.floor(Math.random() * subscriberAvatars.length)];
-                    balloon.style.backgroundImage = `url('${randomAvatar}')`;
-                    balloon.style.left = Math.random() * 85 + 5 + '%';
-                    balloon.style.animationDuration = (Math.random() * 2 + 3) + 's';
-                    document.body.appendChild(balloon);
-                    setTimeout(() => balloon.remove(), 4000);
-                }, i * 200);
+        /* EFFET DE BALLONS FLUIDE ET NON GÊNANT */
+        function triggerBalloonsThenSwitch(targetViewId) {
+            const overlay = document.getElementById('balloons-overlay');
+            overlay.innerHTML = '';
+            overlay.classList.add('active');
+
+            // Générer juste ce qu'il faut de ballons (ex: 7 ballons espacés) pour ne pas saturer l'écran
+            for (let i = 0; i < 7; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                const randomAvatar = subscriberAvatars[Math.floor(Math.random() * subscriberAvatars.length)];
+                balloon.style.backgroundImage = `url('${randomAvatar}')`;
+                balloon.style.left = (i * 14 + Math.random() * 5) + '%';
+                balloon.style.animationDuration = (Math.random() * 0.5 + 2) + 's';
+                overlay.appendChild(balloon);
             }
+
+            // Changer de page au moment où les ballons montent bien et nettoyer ensuite
+            setTimeout(() => {
+                document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden-view'));
+                const activeView = document.getElementById(targetViewId);
+                if (activeView) activeView.classList.remove('hidden-view');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (targetViewId === 'youtube-view') {
+                    fetchYouTubeLiveStats();
+                } else if (targetViewId === 'forum-view') {
+                    updateForumUI();
+                } else if (targetViewId === 'candidature-view') {
+                    updateCandidatureUI();
+                } else if (targetViewId === 'admin-view') {
+                    document.getElementById('admin-forum-q-input').value = forumQuestion;
+                    document.getElementById('admin-cand-q-input').value = candQuestion;
+                }
+            }, 900);
+
+            // Retirer le conteneur overlay après l'animation pour libérer l'écran
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                overlay.innerHTML = '';
+            }, 3000);
         }
 
-        // --- GESTION DU FORUM ---
         function updateForumUI() {
             document.getElementById('forum-current-question').textContent = forumQuestion ? forumQuestion : "Aucune question définie pour le moment.";
             const listContainer = document.getElementById('forum-replies-list');
@@ -779,7 +807,6 @@
             showToast('Réponse publiée avec succès');
         }
 
-        // --- GESTION DES CANDIDATURES ---
         function updateCandidatureUI() {
             const banner = document.getElementById('cand-status-banner');
             const formCard = document.getElementById('cand-form-card');
@@ -812,7 +839,6 @@
             document.getElementById('moderator-form').reset();
         }
 
-        // --- ESPACE ADMIN ---
         function openAdminLogin() {
             document.getElementById('admin-modal').style.display = 'flex';
         }
@@ -824,7 +850,6 @@
 
         function verifyAdminToken() {
             const token = document.getElementById('admin-token-input').value;
-            // Mot de passe secret défini (Sim.2k26)
             if (token === "Sim.2k26") {
                 closeAdminLogin();
                 switchView('admin-view');
@@ -920,7 +945,6 @@
                             const videoId = snippet.resourceId.videoId;
                             const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-                            // Ajouter les miniatures aux avatars de ballons pour varier
                             if (snippet.thumbnails.medium && snippet.thumbnails.medium.url) {
                                 subscriberAvatars.push(snippet.thumbnails.medium.url);
                             }
