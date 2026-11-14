@@ -41,7 +41,7 @@
             padding-bottom: 50px;
         }
 
-        /* TRANSITION BALLONS COEURS ABONNÉS */
+        /* TRANSITION BALLONS COEURS ABONNÉS (MIN 110 BALLONS) */
         #balloon-transition-layer {
             position: fixed;
             inset: 0;
@@ -52,30 +52,28 @@
 
         .heart-balloon {
             position: absolute;
-            bottom: -220px;
-            width: 160px;
-            height: 160px;
+            bottom: -240px;
+            width: 170px;
+            height: 170px;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: riseUpAndCover 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation: riseUpAndCover 1.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             filter: drop-shadow(0 10px 20px rgba(201, 24, 74, 0.35));
+            will-change: transform, opacity;
         }
 
-        /* Forme de cœur SVG en fond du ballon */
         .heart-balloon svg {
             position: absolute;
             width: 100%;
             height: 100%;
-            fill: #ff2a6d;
         }
 
-        /* Photo de profil de l'abonné au centre du cœur */
         .heart-balloon img {
             position: relative;
             z-index: 2;
-            width: 68px;
-            height: 68px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid #ffffff;
@@ -83,28 +81,27 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* Ficelle du ballon */
         .balloon-string {
             position: absolute;
             bottom: -45px;
             left: 50%;
             width: 2px;
             height: 50px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             transform: translateX(-50%);
         }
 
         @keyframes riseUpAndCover {
             0% {
-                transform: translateY(0) scale(0.8) rotate(-5deg);
+                transform: translateY(0) scale(0.85) rotate(-6deg);
                 opacity: 1;
             }
-            50% {
-                transform: translateY(-65vh) scale(1.25) rotate(5deg);
+            45% {
+                transform: translateY(-60vh) scale(1.3) rotate(6deg);
                 opacity: 1;
             }
             100% {
-                transform: translateY(-145vh) scale(1.1) rotate(-3deg);
+                transform: translateY(-155vh) scale(1.15) rotate(-4deg);
                 opacity: 0;
             }
         }
@@ -229,7 +226,7 @@
             backdrop-filter: blur(16px);
             border: 1px solid var(--card-border);
             border-radius: 20px;
-            padding: 14px 28px;
+            padding: 14px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -238,6 +235,8 @@
             position: sticky;
             top: 20px;
             z-index: 100;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .logo {
@@ -251,9 +250,10 @@
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 12px;
             list-style: none;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-link-item {
@@ -261,9 +261,9 @@
             border: none;
             color: var(--text-muted);
             font-weight: 700;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-            padding: 6px 12px;
+            font-size: 0.92rem;
+            transition: all 0.2s;
+            padding: 7px 12px;
             border-radius: 12px;
         }
 
@@ -275,7 +275,7 @@
         .nav-btn {
             background: var(--primary-gradient);
             color: white !important;
-            padding: 10px 22px;
+            padding: 9px 18px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 0.9rem;
@@ -462,10 +462,32 @@
         }
 
         .btn:hover { transform: translateY(-2px); }
-        .btn-youtube { background: linear-gradient(135deg, #ff2a6d, #c9184a); color: white; }
+        .btn-youtube { background: linear-gradient(135deg, #ff2a6d, #c9184a); color: white; box-shadow: 0 6px 20px rgba(255, 42, 109, 0.25); }
         .btn-discord { background: linear-gradient(135deg, #5865F2, #404eed); color: white; }
         .btn-roblox { background: linear-gradient(135deg, #23272a, #000000); color: white; }
         .btn-secondary { background: rgba(255, 179, 198, 0.25); color: var(--primary); margin-top: 8px; font-size: 0.85rem; padding: 10px; }
+
+        /* INFO SITE CREATOR BOX */
+        .creator-card {
+            text-align: center;
+            padding: 45px 30px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,229,236,0.9));
+            border: 2px solid #ff80a0;
+        }
+
+        .free-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #c9184a;
+            color: white;
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 18px rgba(201, 24, 74, 0.25);
+        }
 
         /* YOUTUBE VIEW */
         .yt-hero {
@@ -557,14 +579,14 @@
         @keyframes pulse-avatar { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         @media (max-width: 768px) {
-            .navbar { flex-direction: column; gap: 15px; padding: 15px; }
-            .nav-links { gap: 10px; flex-wrap: wrap; justify-content: center; }
+            .navbar { flex-direction: column; gap: 12px; padding: 15px; }
+            .nav-links { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- COUCHE DE TRANSITION BALLONS COEURS ABONNÉS -->
+    <!-- COUCHE DE TRANSITION BALLONS COEURS ABONNÉS (MIN 110 BALLONS) -->
     <div id="balloon-transition-layer"></div>
 
     <!-- AMBIENT GLOWS -->
@@ -593,6 +615,7 @@
                 <li><button class="nav-link-item" onclick="navigateWithBalloons('bio-section')">Bio</button></li>
                 <li><button class="nav-link-item" onclick="navigateWithBalloons('reseaux-section')">Réseaux</button></li>
                 <li><button class="nav-link-item" onclick="navigateWithBalloons('gaming-section')">Gaming</button></li>
+                <li><button class="nav-link-item" onclick="navigateWithBalloons('infosite-section')">Info Site</button></li>
                 <li>
                     <button class="nav-btn" onclick="navigateWithBalloons('youtube-section')">
                         <i class="fa-brands fa-youtube"></i> Côté YouTube
@@ -601,7 +624,7 @@
             </ul>
         </nav>
 
-        <!-- SECTION ACCUEIL / HERO (TOUJOURS VISIBLE SUR L'ACCUEIL) -->
+        <!-- SECTION ACCUEIL / HERO -->
         <div id="home-section" class="page-view">
             <header class="card hero">
                 <div class="avatar-wrapper">
@@ -740,6 +763,29 @@
             </div>
         </div>
 
+        <!-- SECTION INFO SITE -->
+        <div id="infosite-section" class="page-view hidden-view">
+            <h2 class="section-title">
+                <i class="fa-solid fa-circle-info" style="color: #ff2a6d;"></i> Info Site
+            </h2>
+            <div class="card creator-card">
+                <div class="free-pill">
+                    <i class="fa-solid fa-gift"></i> 100% CRÉÉ GRATUITEMENT
+                </div>
+                <h3 style="color: #c9184a; font-size: 1.7rem; font-weight: 800; margin-bottom: 15px;">
+                    Tu aimes ce site et tu veux le tien ? ✨
+                </h3>
+                <p style="font-size: 1.05rem; color: var(--text-main); line-height: 1.6; max-width: 650px; margin: 0 auto 28px auto;">
+                    Ce site a été conçu et développé <strong>entièrement gratuitement</strong> ! Si toi aussi tu veux ton propre site web personnalisé (pour ta chaîne YouTube, ton serveur Discord ou ton profil Roblox), viens me le demander directement sur ma chaîne YouTube !
+                </p>
+                <div style="max-width: 340px; margin: 0 auto;">
+                    <a href="https://www.youtube.com/@melyo_rblx" target="_blank" class="btn btn-youtube" style="font-size: 1.05rem; padding: 15px 25px;">
+                        <i class="fa-brands fa-youtube"></i> Mon YouTube : @melyo_rblx
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- SECTION CÔTÉ YOUTUBE -->
         <div id="youtube-section" class="page-view hidden-view">
             <div class="yt-hero">
@@ -783,7 +829,7 @@
 
         <footer>
             <p>Fait avec 💖 pour la communauté de <strong>Simbloxy</strong> (Linda)</p>
-            <p style="margin-top: 6px; font-size: 0.8rem; opacity: 0.8;">© <span id="year"></span> Simbloxy • Tous droits réservés ✨</p>
+            <p style="margin-top: 6px; font-size: 0.8rem; opacity: 0.8;">© <span id="year"></span> Simbloxy • Créé gratuitement par <a href="https://www.youtube.com/@melyo_rblx" target="_blank" style="color: #c9184a; text-decoration: underline;">@melyo_rblx</a> ✨</p>
         </footer>
 
     </div>
@@ -802,20 +848,20 @@
             "file_000000003b8482108edbae23e4537d50.png"
         ];
 
-        // Pré-charger les photos de profil des abonnés depuis les commentaires YouTube dès l'ouverture
+        // Pré-charger un maximum de photos de profil d'abonnés depuis YouTube
         async function preloadSubscriberAvatars() {
             try {
                 const channelRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forHandle=${CHANNEL_HANDLE}&key=${YOUTUBE_API_KEY}`);
                 const channelData = await channelRes.json();
                 if (channelData.items && channelData.items.length > 0) {
                     const uploadsId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
-                    const videosRes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsId}&maxResults=3&key=${YOUTUBE_API_KEY}`);
+                    const videosRes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsId}&maxResults=5&key=${YOUTUBE_API_KEY}`);
                     const videosData = await videosRes.json();
 
                     if (videosData.items) {
                         for (let item of videosData.items) {
                             const vidId = item.snippet.resourceId.videoId;
-                            const commentRes = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${vidId}&maxResults=15&key=${YOUTUBE_API_KEY}`);
+                            const commentRes = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${vidId}&maxResults=25&key=${YOUTUBE_API_KEY}`);
                             const commentData = await commentRes.json();
                             if (commentData.items) {
                                 commentData.items.forEach(c => {
@@ -829,11 +875,10 @@
                     }
                 }
             } catch (e) {
-                console.log("Utilisation des avatars par défaut pour les ballons");
+                console.log("Utilisation des avatars disponibles pour les ballons");
             }
         }
 
-        // Lancer le pré-chargement des PDP des abonnés au démarrage
         preloadSubscriberAvatars();
 
         function enterSite() {
@@ -841,27 +886,29 @@
             document.getElementById('main-container').classList.add('visible');
         }
 
-        // FONCTION DE CHANGEMENT DE PAGE AVEC VAGUE DE BALLONS COEURS QUI RECOUVRENT L'ÉCRAN
+        // CHANGEMENT DE PAGE AVEC MINIMUM 115 BALLONS EN FORME DE COEUR
         function navigateWithBalloons(targetSectionId) {
             const layer = document.getElementById('balloon-transition-layer');
-            layer.innerHTML = ''; // Nettoyer les anciens ballons
+            layer.innerHTML = '';
 
-            // Créer une vague dense de 45 ballons en forme de cœur qui recouvrent tout l'écran en montant
-            const totalBalloons = 45;
-            const colors = ['#ff2a6d', '#ff4d6d', '#ff758c', '#c9184a', '#ff80a0'];
+            const totalBalloons = 115; // Plus de 100 ballons pour recouvrir 100% de l'écran
+            const colors = ['#ff2a6d', '#ff4d6d', '#ff758c', '#c9184a', '#ff80a0', '#e01e5a'];
 
             for (let i = 0; i < totalBalloons; i++) {
                 const balloon = document.createElement('div');
                 balloon.className = 'heart-balloon';
 
-                // Répartition sur toute la largeur de l'écran (de -5% à 100%)
-                const leftPos = (i / totalBalloons) * 105 - 5 + (Math.random() * 6 - 3);
-                const delay = Math.random() * 0.35; // Décalage léger pour un effet de vague naturelle
+                // Répartition dense sur toute la largeur et en plusieurs vagues verticales
+                const leftPos = Math.random() * 108 - 6;
+                const delay = Math.random() * 0.45;
+                const scaleVariant = 0.9 + Math.random() * 0.45;
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 const avatarSrc = subscriberAvatars[i % subscriberAvatars.length];
 
                 balloon.style.left = leftPos + '%';
                 balloon.style.animationDelay = delay + 's';
+                balloon.style.width = Math.round(160 * scaleVariant) + 'px';
+                balloon.style.height = Math.round(160 * scaleVariant) + 'px';
 
                 balloon.innerHTML = `
                     <svg viewBox="0 0 32 29.6" style="fill: ${color};">
@@ -875,7 +922,7 @@
                 layer.appendChild(balloon);
             }
 
-            // Changer le contenu de la page au moment exact où les ballons recouvrent tout l'écran (750ms)
+            // Changer la section visible au moment où l'écran est totalement caché par les ballons (800ms)
             setTimeout(() => {
                 document.querySelectorAll('.page-view').forEach(view => {
                     view.classList.add('hidden-view');
@@ -889,12 +936,12 @@
                 if (targetSectionId === 'youtube-section') {
                     fetchYouTubeLiveStats();
                 }
-            }, 750);
+            }, 800);
 
-            // Nettoyer le conteneur de ballons une fois l'animation terminée
+            // Nettoyer le DOM après le passage de tous les ballons
             setTimeout(() => {
                 layer.innerHTML = '';
-            }, 2300);
+            }, 2500);
         }
 
         function copyDiscordLink() {
